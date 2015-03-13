@@ -1,0 +1,35 @@
+{
+  "name": "directory-contents",
+  "version": "1.0.0",
+  "description": "Recursively loads directory contents as an object.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha && jshint index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bloutiouf/directory-contents"
+  },
+  "keywords": [
+    "directory",
+    "filesystem",
+    "fs"
+  ],
+  "author": "Bloutiouf",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bloutiouf/directory-contents/issues"
+  },
+  "homepage": "https://github.com/Bloutiouf/directory-contents",
+  "devDependencies": {
+    "jshint": "^2.6.3",
+    "mocha": "^2.2.1"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "merge": "^1.2.0"
+  }
+}
