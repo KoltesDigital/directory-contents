@@ -1,6 +1,6 @@
 {
   "name": "directory-contents",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Recursively loads directory contents as an object.",
   "main": "index.js",
   "directories": {

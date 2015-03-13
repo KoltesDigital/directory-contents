@@ -3,33 +3,43 @@ var fs = require('fs');
 var merge = require('merge');
 var path = require('path');
 
+function requireAsync(filename, callback) {
+	var data;
+	try {
+		data = require(filename);
+	} catch (err) {
+		return callback(err);
+	}
+	return callback(null, data);
+}
+
+function requireSync(filename, callback) {
+	return require(filename);
+}
+
+function textAsync(filename, callback) {
+	return fs.readFile(filename, {
+		encoding: 'utf8'
+	}, callback);
+}
+
+function textSync(filename) {
+	return fs.readFileSync(filename, {
+		encoding: 'utf8'
+	});
+}
+
 module.exports = function(dir, options, callback) {
 	if (!callback) {
 		callback = options;
 		options = null;
 	}
 	
-	function loadRequire(filename, callback) {
-		var data;
-		try {
-			data = require(filename);
-		} catch (err) {
-			return callback(err);
-		}
-		return callback(null, data);
-	}
-	
-	function loadText(filename, callback) {
-		return fs.readFile(filename, {
-			encoding: 'utf8'
-		}, callback);
-	}
-	
 	options = merge.recursive({
 		extensions: {
-			js: loadRequire,
-			json: loadRequire,
-			txt: loadText
+			js: requireAsync,
+			json: requireAsync,
+			txt: textAsync
 		},
 		stripExtensions: true,
 	}, options);
@@ -98,4 +108,46 @@ module.exports = function(dir, options, callback) {
 	}
 	
 	return parseDir(dir, callback);
+};
+
+module.exports.sync = function(dir, options) {
+	options = merge.recursive({
+		extensions: {
+			js: requireSync,
+			json: requireSync,
+			txt: textSync
+		},
+		stripExtensions: true,
+	}, options);
+	
+	function parseDir(dir) {
+		var contents = {};
+		
+		var filenames = fs.readdirSync(dir);
+		filenames.forEach(function(filename) {
+			var key;
+			var filepath = path.resolve(dir, filename);
+			var stats = fs.statSync(filepath);
+			
+			if (stats.isDirectory()) {
+				key = path.basename(filename);
+				contents[key] = parseDir(filepath);
+			}
+			
+			if (stats.isFile()) {
+				var extension = path.extname(filename);
+				var loader = options.extensions[extension.substr(1).toLowerCase()];
+				
+				if (!loader)
+					return;
+				
+				key = (options.stripExtensions ? path.basename(filename, extension) : path.basename(filename));
+				contents[key] = loader(filepath, stats);
+			}
+		});
+		
+		return contents;
+	}
+	
+	return parseDir(dir);
 };

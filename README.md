@@ -10,6 +10,8 @@ Recursively loads directory contents as an object.
 
 ### directoryContents(path [, options], callback)
 
+Asynchronously loads the directory contents, passed to `callback`.
+
 `options` is an optional object which can contain the following properties:
 
 * `extensions` (default: see below) maps file extensions to loader functions
@@ -31,6 +33,7 @@ You can override the default loader functions, or disable one by setting it to `
 
 Example: parse YAML files
 
+	var directoryContents = require('directory-contents');
 	var fs = require('fs');
 	var yaml = require('js-yaml');
 	
@@ -54,7 +57,32 @@ Example: parse YAML files
 			}
 		}
 	}, function(err, contents) { ... });
+
+### Synchronous version
+
+In some cases, such as the start-up initialization, you may require to synchronously load the directory contents. For that, use `directoryContents.sync`. The explanations above stay true, except that the functions return the values instead of passing them to a callback.
+
+Example: synchronously parse YAML files
+
+	var directoryContents = require('directory-contents');
+	var fs = require('fs');
+	var yaml = require('js-yaml');
 	
+	var contents = directoryContents.sync('test/dir', {
+		extensions: {
+			yaml: function(filename) {
+				var data = fs.readFileSync(filename, {
+					encoding: 'utf8'
+				});
+				return yaml.load(data);
+			}
+		}
+	});
+	...
+
+Although this example is smaller than the previous one, don't let this fool you. In most cases, you should **use the asynchronous version**, as it implies IO operations.
+
+
 
 ## Test example
 
