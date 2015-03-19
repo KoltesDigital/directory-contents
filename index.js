@@ -33,7 +33,8 @@ module.exports = function(dir, options, callback) {
 		extensions: {
 			js: requireAsync,
 			json: requireAsync,
-			txt: readTextAsync
+			txt: readTextAsync,
+			"*": readFileAsync
 		},
 		stripExtensions: true,
 	}, options);
@@ -77,7 +78,7 @@ module.exports = function(dir, options, callback) {
 						
 						if (stats.isFile()) {
 							var extension = path.extname(filename);
-							var loader = options.extensions[extension.substr(1).toLowerCase()];
+							var loader = options.extensions[extension.substr(1).toLowerCase()] || options.extensions["*"];
 							
 							if (!loader)
 								return callback();
@@ -127,7 +128,8 @@ module.exports.sync = function(dir, options) {
 		extensions: {
 			js: requireSync,
 			json: requireSync,
-			txt: readTextSync
+			txt: readTextSync,
+			"*": readFileSync
 		},
 		stripExtensions: true,
 	}, options);
@@ -148,7 +150,7 @@ module.exports.sync = function(dir, options) {
 			
 			if (stats.isFile()) {
 				var extension = path.extname(filename);
-				var loader = options.extensions[extension.substr(1).toLowerCase()];
+				var loader = options.extensions[extension.substr(1).toLowerCase()] || options.extensions["*"];
 				
 				if (!loader)
 					return;

@@ -21,7 +21,7 @@ Asynchronously loads the directory contents, passed to `callback`.
 
 ### Extensions
 
-The `options.extensions` object specifies how the files are loaded. Keys are lowercase file extensions (`"js"`, `"txt"`...) and values are asynchronous loader functions with the signature `(path: string [, fileStats: fs.Stats], callback: (err|null, contents))`.
+The `options.extensions` object specifies how the files are loaded. Keys are lowercase file extensions (`"js"`, `"txt"`...) and values are asynchronous loader functions with the signature `(path: string [, fileStats: fs.Stats], callback: (err|null, contents))`. `"*"` is a special key which matches unspecified extensions.
 
 Convenient loaders are provided:
 
@@ -34,7 +34,8 @@ The default extensions are:
 	{
 		"js": directoryContents.require,
 		"json": directoryContents.require,
-		"txt": directoryContents.readText
+		"txt": directoryContents.readText,
+		"*": directoryContents.readFile
 	}
 
 When specifying a custom `extensions` object, it will fully override these default extensions.
@@ -120,7 +121,8 @@ Output:
 		math: {
 			add: [Function]
 		},
- 		recipe: 'Choux à la crème'
+ 		recipe: 'Choux à la crème',
+ 		token: <Buffer 34 32>
 	}
 
 ## License

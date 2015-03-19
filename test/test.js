@@ -19,6 +19,7 @@ describe('directory-contents', function() {
 				});
 				assert.strictEqual(contents.math.add(2, 3), 5);
 				assert.strictEqual(contents.recipe, 'Choux à la crème');
+				assert.strictEqual(contents.token.toString('hex'), '3432');
 				
 				return done();
 			});
@@ -38,6 +39,7 @@ describe('directory-contents', function() {
 				});
 				assert.strictEqual(contents['math.js'].add(2, 3), 5);
 				assert.strictEqual(contents['recipe.txt'], 'Choux à la crème');
+				assert.strictEqual(contents['token.bin'].toString('hex'), '3432');
 				
 				return done();
 			});
@@ -57,6 +59,7 @@ describe('directory-contents', function() {
 				assert.deepEqual(contents.config, {});
 				assert.strictEqual(contents.math, 52);
 				assert.ok(!contents.hasOwnProperty('recipe'));
+				assert.ok(!contents.hasOwnProperty('token'));
 				
 				return done();
 			});
@@ -74,6 +77,7 @@ describe('directory-contents', function() {
 			});
 			assert.strictEqual(contents.math.add(2, 3), 5);
 			assert.strictEqual(contents.recipe, 'Choux à la crème');
+			assert.strictEqual(contents.token.toString('hex'), '3432');
 		});
 		
 		it('gets directory contents without stripping extensions', function() {
@@ -88,6 +92,7 @@ describe('directory-contents', function() {
 			});
 			assert.strictEqual(contents['math.js'].add(2, 3), 5);
 			assert.strictEqual(contents['recipe.txt'], 'Choux à la crème');
+			assert.strictEqual(contents['token.bin'].toString('hex'), '3432');
 		});
 		
 		it('gets directory contents with other extensions', function() {
@@ -102,6 +107,7 @@ describe('directory-contents', function() {
 			assert.deepEqual(contents.config, {});
 			assert.strictEqual(contents.math, 52);
 			assert.ok(!contents.hasOwnProperty('recipe'));
+			assert.ok(!contents.hasOwnProperty('token'));
 		});
 	});
 });
