@@ -36,6 +36,7 @@ module.exports = function(dir, options, callback) {
 			txt: readTextAsync,
 			"*": readFileAsync
 		},
+		recursive: true,
 		stripExtensions: true,
 	}, options);
 	
@@ -54,7 +55,7 @@ module.exports = function(dir, options, callback) {
 						if (err)
 							return callback(err);
 						
-						if (stats.isDirectory()) {
+						if (stats.isDirectory() && options.recursive) {
 							return parseDir(filepath, function(err, content) {
 								if (err)
 									return callback(err);
@@ -131,6 +132,7 @@ module.exports.sync = function(dir, options) {
 			txt: readTextSync,
 			"*": readFileSync
 		},
+		recursive: true,
 		stripExtensions: true,
 	}, options);
 	
@@ -143,7 +145,7 @@ module.exports.sync = function(dir, options) {
 			var filepath = path.resolve(dir, filename);
 			var stats = fs.statSync(filepath);
 			
-			if (stats.isDirectory()) {
+			if (stats.isDirectory() && options.recursive) {
 				key = path.basename(filename);
 				contents[key] = parseDir(filepath);
 			}

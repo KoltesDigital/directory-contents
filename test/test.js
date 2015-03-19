@@ -25,6 +25,22 @@ describe('directory-contents', function() {
 			});
 		});
 		
+		it('gets directory contents without recursion', function(done) {
+			return directoryContents(dir, {
+				recursive: false
+			}, function(err, contents) {
+				if (err)
+					return done(err);
+				
+				assert.ok(!contents.hasOwnProperty('config'));
+				assert.strictEqual(contents.math.add(2, 3), 5);
+				assert.strictEqual(contents.recipe, 'Choux à la crème');
+				assert.strictEqual(contents.token.toString('hex'), '3432');
+				
+				return done();
+			});
+		});
+		
 		it('gets directory contents without stripping extensions', function(done) {
 			return directoryContents(dir, {
 				stripExtensions: false
@@ -75,6 +91,17 @@ describe('directory-contents', function() {
 					port: 3000
 				}
 			});
+			assert.strictEqual(contents.math.add(2, 3), 5);
+			assert.strictEqual(contents.recipe, 'Choux à la crème');
+			assert.strictEqual(contents.token.toString('hex'), '3432');
+		});
+		
+		it('gets directory contents without recursion', function() {
+			var contents = directoryContents.sync(dir, {
+				recursive: false
+			});
+			
+			assert.ok(!contents.hasOwnProperty('config'));
 			assert.strictEqual(contents.math.add(2, 3), 5);
 			assert.strictEqual(contents.recipe, 'Choux à la crème');
 			assert.strictEqual(contents.token.toString('hex'), '3432');

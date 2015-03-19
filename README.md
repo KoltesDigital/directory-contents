@@ -14,7 +14,8 @@ Asynchronously loads the directory contents, passed to `callback`.
 
 `options` is an optional object which can contain the following properties:
 
-* `extensions` (default: see below) maps file extensions to loader functions
+* `extensions` (default: see below) maps file extensions to loader functions.
+* `recursive` (default: `true`) whether to browse subdirectories.
 * `stripExtensions` (default: `true`) whether the extensions should be omitted in the contents' properties.
 
 `callback` takes as first argument an Error object if an error has occured, otherwise undefined, and as second argument the contents object.
