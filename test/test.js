@@ -48,8 +48,7 @@ describe('directory-contents', function() {
 				extensions: {
 					js: function(filename, stats, callback) {
 						return callback(null, stats.size);
-					},
-					json: null
+					}
 				}
 			}, function(err, contents) {
 				if (err)
@@ -57,7 +56,7 @@ describe('directory-contents', function() {
 				
 				assert.deepEqual(contents.config, {});
 				assert.strictEqual(contents.math, 52);
-				assert.strictEqual(contents.recipe, 'Choux à la crème');
+				assert.ok(!contents.hasOwnProperty('recipe'));
 				
 				return done();
 			});
@@ -96,14 +95,13 @@ describe('directory-contents', function() {
 				extensions: {
 					js: function(filename, stats) {
 						return stats.size;
-					},
-					json: null
+					}
 				}
 			});
 			
 			assert.deepEqual(contents.config, {});
 			assert.strictEqual(contents.math, 52);
-			assert.strictEqual(contents.recipe, 'Choux à la crème');
+			assert.ok(!contents.hasOwnProperty('recipe'));
 		});
 	});
 });

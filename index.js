@@ -13,20 +13,14 @@ function requireAsync(filename, callback) {
 	return callback(null, data);
 }
 
-function requireSync(filename, callback) {
-	return require(filename);
+function readFileAsync(filename, callback) {
+	return fs.readFile(filename, callback);
 }
 
-function textAsync(filename, callback) {
+function readTextAsync(filename, callback) {
 	return fs.readFile(filename, {
 		encoding: 'utf8'
 	}, callback);
-}
-
-function textSync(filename) {
-	return fs.readFileSync(filename, {
-		encoding: 'utf8'
-	});
 }
 
 module.exports = function(dir, options, callback) {
@@ -35,11 +29,11 @@ module.exports = function(dir, options, callback) {
 		options = null;
 	}
 	
-	options = merge.recursive({
+	options = merge({
 		extensions: {
 			js: requireAsync,
 			json: requireAsync,
-			txt: textAsync
+			txt: readTextAsync
 		},
 		stripExtensions: true,
 	}, options);
@@ -110,12 +104,30 @@ module.exports = function(dir, options, callback) {
 	return parseDir(dir, callback);
 };
 
+module.exports.readFile = readFileAsync;
+module.exports.readText = readTextAsync;
+module.exports.require = requireAsync;
+
+function requireSync(filename, callback) {
+	return require(filename);
+}
+
+function readFileSync(filename) {
+	return fs.readFileSync(filename);
+}
+
+function readTextSync(filename) {
+	return fs.readFileSync(filename, {
+		encoding: 'utf8'
+	});
+}
+
 module.exports.sync = function(dir, options) {
-	options = merge.recursive({
+	options = merge({
 		extensions: {
 			js: requireSync,
 			json: requireSync,
-			txt: textSync
+			txt: readTextSync
 		},
 		stripExtensions: true,
 	}, options);
@@ -151,3 +163,7 @@ module.exports.sync = function(dir, options) {
 	
 	return parseDir(dir);
 };
+
+module.exports.sync.readFile = readFileSync;
+module.exports.sync.readText = readTextSync;
+module.exports.sync.require = requireSync;

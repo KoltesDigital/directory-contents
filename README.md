@@ -23,15 +23,23 @@ Asynchronously loads the directory contents, passed to `callback`.
 
 The `options.extensions` object specifies how the files are loaded. Keys are lowercase file extensions (`"js"`, `"txt"`...) and values are asynchronous loader functions with the signature `(path: string [, fileStats: fs.Stats], callback: (err|null, contents))`.
 
-The default behaviors are:
+Convenient loaders are provided:
 
-* `js`: `require`s the file
-* `json`: parses the file contents
-* `txt`: reads the file contents (UTF8)
+* `directoryContents.readFile`: reads the file contents as a Buffer (no encoding is presupposed)
+* `directoryContents.readText`: reads the file contents as a String (encoding is UTF8)
+* `directoryContents.require`: `require`s the file (works on JS and JSON files)
 
-You can override the default loader functions, or disable one by setting it to `null`.
+The default extensions are:
 
-Example: parse YAML files
+	{
+		"js": directoryContents.require,
+		"json": directoryContents.require,
+		"txt": directoryContents.readText
+	}
+
+When specifying a custom `extensions` object, it will fully override these default extensions.
+
+Example: only parse YAML files
 
 	var directoryContents = require('directory-contents');
 	var fs = require('fs');
@@ -62,6 +70,8 @@ Example: parse YAML files
 
 In some cases, such as the start-up initialization, you may require to synchronously load the directory contents. For that, use `directoryContents.sync`. The explanations above stay true, except that the functions return the values instead of passing them to a callback.
 
+There are also convenient synchronous loaders with the same purpose as the asynchronous ones: `directoryContents.sync.readFile`, `directoryContents.sync.readText`, and `directoryContents.sync.require`.
+
 Example: synchronously parse YAML files
 
 	var directoryContents = require('directory-contents');
@@ -81,8 +91,6 @@ Example: synchronously parse YAML files
 	...
 
 Although this example is smaller than the previous one, don't let this fool you. In most cases, you should **use the asynchronous version**, as it implies IO operations.
-
-
 
 ## Test example
 
